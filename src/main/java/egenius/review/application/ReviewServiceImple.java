@@ -1,12 +1,19 @@
 package egenius.review.application;
 
+import egenius.review.dto.RequestDogIds;
 import egenius.review.dto.ReviewRequest;
 import egenius.review.entity.ReviewEntity;
 import egenius.review.infrastructure.ReviewRepository;
+import egenius.review.response.ProductIdsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -15,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReviewServiceImple implements ReviewService {
 
     private final ReviewRepository reviewRepository;
+
+
     @Override
     public void createReview(ReviewRequest reviewRequest) {
         ReviewEntity reviewEntity =
@@ -29,5 +38,28 @@ public class ReviewServiceImple implements ReviewService {
 
         reviewRepository.save(reviewEntity);
 
+    }
+
+    @Override
+    public ProductIdsDto getProductIds(RequestDogIds requestDogIds) {
+        List<Long> productIdsList = new ArrayList<>(); // Initialize the list
+
+        requestDogIds.getDogIds().forEach(dogId -> {
+            List<Long> productDetailList = reviewRepository.findByDogId(dogId);
+            log.info("productDetailList: {}", productDetailList);
+
+            productDetailList.stream()
+                    .filter(Objects::nonNull) // Filter out null values
+                    .forEach(productDetailId -> productIdsList.add(productDetailId));
+
+        });
+
+        log.info("productIdsList: {}", productIdsList);
+
+        ProductIdsDto productIdsDto =
+                ProductIdsDto.formProductIdsDto(
+                        productIdsList.stream().distinct().collect(Collectors.toList()));
+
+        return productIdsDto;
     }
 }

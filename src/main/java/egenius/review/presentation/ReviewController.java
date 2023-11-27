@@ -2,13 +2,11 @@ package egenius.review.presentation;
 
 import egenius.global.common.response.BaseResponse;
 import egenius.review.application.ReviewService;
+import egenius.review.dto.RequestDogIds;
 import egenius.review.dto.ReviewRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/review")
@@ -25,5 +23,11 @@ public class ReviewController {
 
         return new BaseResponse<>();
 
+    }
+
+    @PostMapping("/find-review-dogId")
+    public BaseResponse<?> findReview(@RequestBody RequestDogIds requestDogIds){
+        log.info("findReview");
+        return new BaseResponse<>(reviewService.getProductIds(requestDogIds));
     }
 }
