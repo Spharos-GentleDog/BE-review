@@ -1,23 +1,30 @@
-server:
-  port: 0
+config:
+  activate:
+    on-profile: prod
 
-spring:
-  config:
-    activate:
-      on-profile: prod
+# 스프링배치 설정
+batch:
+  jdbc:
+    initialize-schema: always
+  job:
+    enabled: false
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-      format_sql: true
-    show-sql: true
+# 카프카 접속정보 설정
+kafka:
+  bootstrap-servers: ${BOOTSTRAP_SERVERS}
 
-  # Replication 설정
-  datasource:
-    url: ${MASTER_DB_URL}
-    username: ${MASTER_DB_USERNAME}
-    password: ${MASTER_DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+jpa:
+  hibernate:
+    ddl-auto: update
+    format_sql: true
+  show-sql: true
+
+# Replication 설정
+datasource:
+  url: ${MASTER_DB_URL}
+  username: ${MASTER_DB_USERNAME}
+  password: ${MASTER_DB_PASSWORD}
+  driver-class-name: com.mysql.cj.jdbc.Driver
 
 # 유레카 설정
 eureka:
