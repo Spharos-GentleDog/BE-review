@@ -10,6 +10,6 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long>{
 
-    @Query(value = "SELECT product_id FROM `gentle-dog-review`.review WHERE dog_id = :dogId AND rating >= 3 GROUP BY product_id; ", nativeQuery = true)
+    @Query(value = "SELECT product_id FROM `review`.review WHERE dog_id = :dogId AND rating >= 3 GROUP BY product_id; ", nativeQuery = true)
     List<Long> findByDogId(@Param("dogId") Long dogId);
 }
